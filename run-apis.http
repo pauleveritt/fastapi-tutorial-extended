@@ -1,0 +1,69 @@
+# Get HTML listing at /polls/
+GET http://localhost:8000/polls/
+
+###
+
+# Get lists of questions
+GET http://localhost:8000/v1/question/
+
+###
+
+# Get Question with specific ID
+
+GET http://localhost:8000/v1/question/1
+
+###
+
+POST http://localhost:8000/v1/question/
+Content-Type: application/json
+
+{
+  "question_text": "This is a sample question",
+  "pub_date": "2022-01-01",
+  "choices": [
+    {
+      "choice_text": "Choice 1"
+    },
+    {
+      "choice_text": "Choice 2"
+    },
+    {
+      "choice_text": "Choice 3"
+    },
+    {
+      "choice_text": "Choice 4"
+    }
+  ]
+}
+
+###
+# Update Question with specific ID
+PUT http://localhost:8000/v1/question/5
+Content-Type: application/json
+
+{
+  "question_text": "Sample Testing !",
+  "pub_date": "2023-02-01"
+}
+
+###
+# Delete Question with Specific ID
+DELETE http://localhost:8000/v1/question/5
+
+###
+# Up/Down Vote Question
+# If you want to up-vote -> 1 || down-vote -> 0
+
+POST http://localhost:8000/v1/vote/
+Content-Type: application/json
+
+{
+  "question_id": 6,
+  "choice_id": 1,
+  "vote": 1
+}
+
+###
+
+
+
