@@ -1,3 +1,5 @@
 -e .
-fastapi
+fastapi~=0.110.3
 black
+sqlmodel~=0.0.18
+uvicorn
