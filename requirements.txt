@@ -4,3 +4,4 @@ black
 sqlmodel~=0.0.18
 uvicorn
 SQLAlchemy~=2.0.29
+Jinja2==3.1.3
