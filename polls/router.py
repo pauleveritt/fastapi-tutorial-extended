@@ -10,7 +10,8 @@ router = APIRouter()
 templates = Jinja2Templates(directory="templates")
 
 
-@router.post("/api/questions/")
+# Questions, API
+@router.post("/v1/question/")
 def create_question(question: Question):
     with Session(engine) as session:
         session.add(question)
@@ -19,14 +20,23 @@ def create_question(question: Question):
         return question
 
 
-@router.get("/api/questions/")
+@router.get("/v1/question/")
 def read_questions():
     with Session(engine) as session:
         questions = session.exec(select(Question)).all()
         return questions
 
 
-@router.get("/questions/{question_id}", response_class=HTMLResponse)
+@router.get("/v1/question/{id}")
+async def read_question_json(request: Request, id: str):
+    with Session(engine) as session:
+        question = session.exec(select(Question).where(Question.id == id))
+        return question.one()
+
+
+# Questions, HTML
+
+@router.get("/question/{question_id}", response_class=HTMLResponse)
 async def read_question_html(request: Request, question_id: str):
     with Session(engine) as session:
         question = session.exec(select(Question).where(Question.id == question_id))
@@ -35,9 +45,4 @@ async def read_question_html(request: Request, question_id: str):
             request=request, name="item.html", context=context
         )
 
-
-@router.get("/api/questions/{id}")
-async def read_question_json(request: Request, id: str):
-    with Session(engine) as session:
-        question = session.exec(select(Question).where(Question.id == id))
-        return question.one()
+# Choices, API
