@@ -1,28 +1,20 @@
-from datetime import datetime
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Request
-from sqlmodel import select, create_engine, SQLModel
-from polls.seed import initialize_table
-from sqlalchemy import event
+from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from sqlalchemy import event
+from sqlmodel import SQLModel
 
-from .models import Question, Choice, Hero
-
+from polls.database import create_db_and_tables
 from polls.router import router as common_router
-
-sqlite_file_name = "database.db"
-sqlite_url = f"sqlite:///{sqlite_file_name}"
-
-connect_args = {"check_same_thread": False}
-engine = create_engine(sqlite_url, echo=True, connect_args=connect_args)
+from polls.seed import initialize_table
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(this_app: FastAPI):
     # create database models.
-    SQLModel.metadata.create_all(engine)
+    create_db_and_tables()
     yield
 
 
@@ -34,9 +26,4 @@ app = FastAPI(lifespan=lifespan)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-
-
 app.include_router(common_router)
-
-
-
