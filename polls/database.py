@@ -1,4 +1,4 @@
-from sqlmodel import SQLModel, create_engine
+from sqlmodel import SQLModel, create_engine, Session
 from sqlalchemy.orm import sessionmaker
 
 sqlite_file_name = "database.db"
@@ -15,9 +15,13 @@ def create_db_and_tables():
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
+# def get_session():
+#     session = SessionLocal()
+#     try:
+#         yield session
+#     finally:
+#         session.close()
+
 def get_session():
-    session = SessionLocal()
-    try:
+    with Session(engine) as session:
         yield session
-    finally:
-        session.close()
