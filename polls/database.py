@@ -1,5 +1,5 @@
-from sqlmodel import SQLModel, create_engine, Session
 from sqlalchemy.orm import sessionmaker
+from sqlmodel import SQLModel, create_engine, Session
 
 sqlite_file_name = "database.db"
 sqlite_url = f"sqlite:///{sqlite_file_name}"
