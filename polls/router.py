@@ -38,6 +38,11 @@ def read_questions(session: Session = Depends(get_session)):
     return questions
 
 
+@router.get("/v1/question/{question_id}")
+async def read_question_json(request: Request, question_id: str):
+    with Session(engine) as session:
+        question = session.exec(select(Question).where(Question.id == question_id))
+        return question.one()
 # @router.get("/v1/question/{id}")
 # async def read_question_json(request: Request, id: str):
 #     with Session(engine) as session:
@@ -64,6 +69,31 @@ def read_question_json(question_id: int, session: Session = Depends(get_session)
     return question_with_options
 
 
+@router.patch("/v1/question/{question_id}", response_model=Question)
+def update_hero(question_id: int, question: Question):
+    with Session(engine) as session:
+        db_hero = session.get(Question, question_id)
+        if not db_hero:
+            raise HTTPException(status_code=404, detail="Hero not found")
+        question_data = question.model_dump(exclude_unset=True)
+        db_hero.sqlmodel_update(question_data)
+        session.add(db_hero)
+        session.commit()
+        session.refresh(db_hero)
+        return db_hero
+
+
+@router.delete("/v1/question/{question_id}")
+async def delete_question(request: Request, question_id: str):
+    with Session(engine) as session:
+        question = session.get(Question, question_id)
+        if not question:
+            raise HTTPException(status_code=404, detail="Question not found")
+        session.delete(question)
+        session.commit()
+        return {"ok": True}
+
+
 # Questions, HTML
 
 @router.get("/question/{question_id}", response_class=HTMLResponse)
@@ -74,3 +104,5 @@ async def read_question_html(request: Request, question_id: str):
         return templates.TemplateResponse(
             request=request, name="item.html", context=context
         )
+
+# Choices, API
