@@ -1,16 +1,16 @@
-<html>
+<html lang="en">
 <head>
-    <title>Item Details</title>
+    <title>Question Details</title>
     <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
 </head>
 <body>
 
 <h1>Questions No. {{ question.id }}</h1>
 <p>{{ question.question_text }}</p>
-    <ul>
-        {% for option in question.choices %}
+<ul>
+    {% for option in question.choices %}
         <li>{{ option.choice_text }}</li>
-        {% endfor %}
-    </ul>
+    {% endfor %}
+</ul>
 </body>
 </html>

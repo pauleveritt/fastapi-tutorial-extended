@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from fastapi import APIRouter, Request, Depends, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
@@ -8,7 +10,9 @@ from polls.database import get_session
 from polls.models import Question
 
 router = APIRouter()
-templates = Jinja2Templates(directory="templates")
+package_dir = Path(__file__).parent.parent.absolute()
+templates_dir = str(package_dir / "templates")
+templates = Jinja2Templates(directory=templates_dir)
 
 
 # Pydantic models for serialization
@@ -80,13 +84,21 @@ async def delete_question(question_id: str, session: Session = Depends(get_sessi
 
 
 # Questions, HTML
+@router.get("/question/", response_class=HTMLResponse)
+async def read_questions_html(request: Request, session: Session = Depends(get_session)):
+    questions = session.exec(select(Question)).all()
+    context = dict(questions=questions)
+    return templates.TemplateResponse(
+        request=request, name="questions.html", context=context
+    )
+
 
 @router.get("/question/{question_id}", response_class=HTMLResponse)
 async def read_question_html(request: Request, question_id: str, session: Session = Depends(get_session)):
     question = session.exec(select(Question).where(Question.id == question_id))
     context = dict(question=question.one())
     return templates.TemplateResponse(
-        request=request, name="item.html", context=context
+        request=request, name="question.html", context=context
     )
 
 # Choices, API
