@@ -44,7 +44,7 @@ def test_read_questions_html(client: TestClient):
     response = client.get("/question/")
     assert response.status_code == 200
     html = BeautifulSoup(response.content, "html5lib")
-    questions = html.select("li a")
+    questions = html.select(".question_text a")
     assert len(questions) == len(questions_data)
     assert questions[0].attrs["href"] == "http://testserver/question/1"
     assert questions[0].text == questions_data[0]["question_text"]
