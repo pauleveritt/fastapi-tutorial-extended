@@ -12,6 +12,7 @@ from polls.router import router as common_router
 from polls.seed import initialize_table
 
 
+
 @asynccontextmanager
 async def lifespan(this_app: FastAPI):
     # create database models.

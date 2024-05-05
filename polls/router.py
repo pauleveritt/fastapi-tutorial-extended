@@ -92,6 +92,11 @@ async def delete_question(question_id: str, session: Session = Depends(get_sessi
     question = session.get(Question, question_id)
     if not question:
         raise HTTPException(status_code=404, detail="Question not found")
+
+    # Update the question_id in choices to NULL
+    for choice in question.choices:
+        choice.question_id = None
+
     session.delete(question)
     session.commit()
     return {"ok": True}

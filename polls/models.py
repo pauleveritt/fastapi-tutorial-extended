@@ -22,5 +22,5 @@ class Choice(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True)
     choice_text: str
     votes: int = Field(default=0)
-    question_id: int = Field(foreign_key="question.id")
+    question_id: int = Field(foreign_key="question.id", nullable=True)
     question: Question | None = Relationship(back_populates="choices")
