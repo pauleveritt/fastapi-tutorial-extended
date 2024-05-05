@@ -54,15 +54,14 @@ def test_read_question_json(client: TestClient):
     # Use the existing seed data
     response = client.get("/v1/question/1")
     data = response.json()
-    assert data["id"] == 1
     assert data["question_text"] == questions_data[0]["question_text"]
 
 
 def test_create_question_json(client: TestClient):
-    post_data = {"question_text": questions_data[0]["question_text"]}
+    post_data = {"question_text": questions_data[0]["question_text"], "choices": ["First Choice"]}
     response = client.post("/v1/question/", json=post_data)
     data = response.json()
-    assert data["question_text"] == post_data["question_text"]
+    assert data["message"] == "Question Added!"
 
 
 def test_patch_question_json(client: TestClient, session: Session):

@@ -89,7 +89,7 @@ def patch_question(question_id: int, question: Question, session: Session = Depe
 def put_question(question_id: int, question: Question, session: Session = Depends(get_session)):
     # Very similar to PATCH
     db_put_question = session.get(Question, question_id)
-    if not db_hero:
+    if not db_put_question:
         raise HTTPException(status_code=404, detail="Question not found")
     question_data = question.model_dump(exclude_unset=True)
     db_put_question.sqlmodel_update(question_data)
