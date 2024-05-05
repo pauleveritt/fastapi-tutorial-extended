@@ -5,9 +5,11 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from sqlmodel import Session, select
-
-from polls.database import get_session
+from datetime import datetime
+from polls.database import get_session, SessionLocal, engine
 from polls.models import Question
+from typing import List, Optional
+from sqlalchemy import text
 
 router = APIRouter()
 package_dir = Path(__file__).parent.parent.absolute()
@@ -17,23 +19,32 @@ templates = Jinja2Templates(directory=templates_dir)
 
 # Pydantic models for serialization
 class Choice(BaseModel):
-    id: int
     choice_text: str
 
 
 class QuestionWithChoices(BaseModel):
-    id: int
     question_text: str
-    choices: list[Choice]
+    choices: List[Choice]
 
 
 @router.post("/v1/question/")
-def create_question(question: Question, session: Session = Depends(get_session)):
-    session.add(question)
-    session.commit()
-    session.refresh(question)
-    return question
+def create_question(request_data: dict, session: Session = Depends(get_session)):
+    from polls.models import Choice
+    question_text = request_data.get("question_text")
+    choices = request_data.get("choices")
 
+    new_question = Question(question_text=question_text)
+    session.add(new_question)
+    session.commit()
+
+    last_inserted_id = new_question.id
+
+    for choice_text in choices:
+        new_choice = Choice(choice_text=choice_text, question_id=last_inserted_id)
+        session.add(new_choice)
+    session.commit()
+
+    return {"status": "ok", "message": "Question Added!"}
 
 @router.get("/v1/question/")
 def read_questions(session: Session = Depends(get_session)):
