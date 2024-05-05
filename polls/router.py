@@ -132,4 +132,10 @@ async def read_question_html(request: Request, question_id: str, session: Sessio
         request=request, name="question.html", context=context
     )
 
-# Choices, API
+
+# Home page
+@router.get("/", response_class=HTMLResponse)
+async def index_html(request: Request):
+    return templates.TemplateResponse(
+        request=request, name="index.html"
+    )

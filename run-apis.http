@@ -1,4 +1,4 @@
-# Get HTML listing at /polls/
+# Get HTML home page
 GET http://localhost:8000/polls/
 
 ###
