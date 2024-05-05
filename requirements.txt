@@ -1,3 +1,4 @@
+-e .
 annotated-types==0.6.0
 anyio==3.7.1
 beautifulsoup4==4.12.3

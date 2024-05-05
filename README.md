@@ -2,6 +2,11 @@
 
 A FastAPI implementation of the official Django tutorial, extended for PyCharm demo uses.
 
+## Prerequisites
+
+- Python 3.10+
+- NodeJS
+
 ## Installation
 
 - Clone this repo and go to the directory.
