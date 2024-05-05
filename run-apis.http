@@ -1,20 +1,20 @@
 # Get HTML home page
-GET http://localhost:8000/polls/
+GET http://localhost:8080/polls/
 
 ###
 
 # Get lists of questions
-GET http://localhost:8000/v1/question/
+GET http://localhost:8080/v1/question/
 
 ###
 
 # Get Question with specific ID
 
-GET http://localhost:8000/v1/question/2
+GET http://localhost:8080/v1/question/2
 
 ###
 
-POST http://localhost:8000/v1/question/
+POST http://localhost:8080/v1/question/
 Content-Type: application/json
 
 {
@@ -26,7 +26,7 @@ Content-Type: application/json
 
 ###
 # Update Question with specific ID
-PUT http://localhost:8000/v1/question/6
+PUT http://localhost:8080/v1/question/6
 Content-Type: application/json
 
 {
@@ -35,13 +35,13 @@ Content-Type: application/json
 
 ###
 # Delete Question with Specific ID
-DELETE http://localhost:8000/v1/question/5
+DELETE http://localhost:8080/v1/question/5
 
 ###
 # Up/Down Vote Question
 # If you want to up-vote -> 1 || down-vote -> 0
 
-POST http://localhost:8000/v1/vote/
+POST http://localhost:8080/v1/vote/
 Content-Type: application/json
 
 {

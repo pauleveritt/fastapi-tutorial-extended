@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 export function Index() {
-    const URL = "http://localhost:8000/v1/question/";
+    const URL = "http://localhost:8080/v1/question/";
     let [questions, setQuestions] = useState(null);
 
     useEffect(() => {
@@ -9,7 +9,6 @@ export function Index() {
             const response = await fetch(URL)
                 .then((response) => response.json())
                 .then((data) => {
-                    console.log(999, data);
                     setQuestions(data);
                 });
         };
