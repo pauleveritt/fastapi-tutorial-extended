@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Questions{% endblock %}
+{% block content %}
+    <div class="flex-grow">
+        <div class="grid gap-4 grid-cols-4 mx-2 mt-2">
+            {% if questions %}
+                {% for question in questions %}
+                    <div class="card lg:card-side bg-base-100 shadow-xl">
+                        <figure>
+                            <img src="{{ url_for('static', path='images/jb_beam.png') }} " alt="Album"
+                                 class="w-32"/>
+                        </figure>
+                        <div class="card-body">
+                            <h2 class="card-title">Question Number {{ question.id }}</h2>
+                            <p class="question_text"><a
+                                href="{{ url_for('read_question_html', question_id=question.id) }}">{{ question.question_text }}</a>
+                            </p>
+                            <div class="card-actions justify-end">
+                                {% for choice in question.choices.all %}
+                                    <div class="badge badge-outline">{{ choice.choice_text }} &nbsp; (<span
+                                        class="text-green-500"><strong>{{ choice.votes }}</strong> </span>)
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No polls are available.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

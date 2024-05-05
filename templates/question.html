@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Question Details{% endblock %}
+{% block content %}
+    <h1>Questions No. {{ question.id }}</h1>
+    <p>{{ question.question_text }}</p>
+    <ul>
+        {% for option in question.choices %}
+            <li>{{ option.choice_text }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
