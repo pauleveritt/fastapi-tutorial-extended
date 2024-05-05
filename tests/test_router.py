@@ -65,7 +65,7 @@ def test_create_question_json(client: TestClient):
     assert data["question_text"] == post_data["question_text"]
 
 
-def test_update_question_json(client: TestClient, session: Session):
+def test_patch_question_json(client: TestClient, session: Session):
     # Load a question
     question = Question(question_text=questions_data[0]["question_text"])
     session.add(question)
@@ -75,6 +75,18 @@ def test_update_question_json(client: TestClient, session: Session):
     assert response.status_code == 200
     data = response.json()
     assert data["question_text"] == "What?"
+
+
+def test_put_question_json(client: TestClient, session: Session):
+    # Load a question
+    question = Question(question_text=questions_data[0]["question_text"])
+    session.add(question)
+    session.commit()
+
+    response = client.put(f"/v1/question/{question.id}", json={"question_text": "Who?"})
+    assert response.status_code == 200
+    data = response.json()
+    assert data["question_text"] == "Who?"
 
 
 def test_delete_question_json(client: TestClient, session: Session):

@@ -61,7 +61,21 @@ def read_question_json(question_id: int, session: Session = Depends(get_session)
 
 
 @router.patch("/v1/question/{question_id}", response_model=Question)
-def update_hero(question_id: int, question: Question, session: Session = Depends(get_session)):
+def patch_hero(question_id: int, question: Question, session: Session = Depends(get_session)):
+    db_hero = session.get(Question, question_id)
+    if not db_hero:
+        raise HTTPException(status_code=404, detail="Hero not found")
+    question_data = question.model_dump(exclude_unset=True)
+    db_hero.sqlmodel_update(question_data)
+    session.add(db_hero)
+    session.commit()
+    session.refresh(db_hero)
+    return db_hero
+
+
+@router.put("/v1/question/{question_id}", response_model=Question)
+def put_hero(question_id: int, question: Question, session: Session = Depends(get_session)):
+    # Very similar to PATCH
     db_hero = session.get(Question, question_id)
     if not db_hero:
         raise HTTPException(status_code=404, detail="Hero not found")
