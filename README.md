@@ -34,6 +34,9 @@ A FastAPI implementation of the official Django tutorial, extended for PyCharm d
 - Double-click on `database.db` to connect to SQLite
     - Install the drivers if needed
 
+*Important note: Some features expect the database to have the seed content. Before demos, stop the server and
+delete `database.db`, then restart.*
+
 ## Main Demo
 
 We're going to talk about the "I" in "IDE".
@@ -50,7 +53,7 @@ We're going to talk about the "I" in "IDE".
 ### Running/Debugging FastAPI Server
 
 - Shift-Shift `tem/bas` to open `templates/base.html`
-- Run the `Django Server` run configuration
+- Run the `FastAPI Server` run configuration
 - Click on link in the run window
 - Navigate to `Questions`
     - Delete the `img` with `PyCharm.svg`
@@ -79,5 +82,58 @@ We're going to talk about the "I" in "IDE".
 
 - Make sure FastAPI server is running
 - Open endpoints tool and show the discovered endpoints
-  - Click second endpoint `/question/ GET`
-    - Run the HTTP Client to test it
+    - Click fourth endpoint `/v1/question/ GET`
+        - Run the HTTP Client to test it
+- Shift-Shift question_id and click the `Endpoints` tab
+- Open `static/site.js` and show autocomplete of URL
+
+## SPA Frontend
+
+- Go to `package.json` and run `start` script
+- Click the link
+- Option-Cmd-O to Navigate to Symbol `App`
+- Remove the import of `Index`
+- Autocomplete the usage and show the import, then navigate to it
+- Go to `className` and start adding `ca-a`
+- Hover over the second choice (the Tailwind one) to preview the Tailwind class
+- Escape to not add it
+- Right-click on `src` and choose `Run tests` to see Vitest testing
+- Double-click the first test to open
+- Change `3` to `2`
+- Click gutter icon to run just that test
+- Mouse-over the `.length` assertion to see inlay with error info
+- Set a breakpoint on that line
+- Run test under the debugger
+
+## pytest
+
+- Right-click on `tests` directory and choose `Run`
+- Double-click on `test_read_questions_json` and set a breakpoint on `data =` line
+- Click gutter icon to debug that one test
+- Remove breakpoint
+- Click continue
+- Open `polls.router.read_questions`
+- Set a breakpoint on `questions =`
+- Re-run test under debugger
+- Step over and see what is returned
+
+## HTTP Files
+
+- With server running NOT in debug
+- Open `run-apis.http`
+- Click the `>>` green arrows at top to run all the tests
+- Open `polls.router.read_questions`
+- Set a breakpoint on `questions =`
+- Stop the server and run it under the debugger
+- Click the `>>` green arrows
+- Execution stops on that route
+
+## External Tools (Prettier, Black)
+
+- Show the settings/preferences that configure both
+- Make a change in some Python and save, showing that it reformats
+- Same in `App.jsx`
+
+## Docker
+
+- Normal Dockerfile stuff

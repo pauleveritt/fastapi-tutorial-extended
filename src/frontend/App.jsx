@@ -1,6 +1,6 @@
 import { Footer } from "./Footer.jsx";
-import { Index } from "./Index.jsx";
 import { Navbar } from "./Navbar.jsx";
+import { Index } from "./Index.jsx";
 
 function App() {
     return (

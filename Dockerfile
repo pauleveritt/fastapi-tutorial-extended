@@ -14,12 +14,12 @@ RUN apt-get update \
         build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
-COPY requirements.txt /app/
-RUN pip install --no-cache-dir -r requirements.txt
-
 # Copy the FastAPI application code into the container
 COPY . /app/
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+
 
 # Expose the port the application runs on
 EXPOSE 8080
