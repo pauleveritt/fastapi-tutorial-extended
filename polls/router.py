@@ -3,28 +3,15 @@ from pathlib import Path
 from fastapi import APIRouter, Request, Depends, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from pydantic import BaseModel
 from sqlmodel import Session, select
-from datetime import datetime
-from polls.database import get_session, SessionLocal, engine
-from polls.models import Question
-from typing import List, Optional
-from sqlalchemy import text
+
+from polls.database import get_session
+from polls.models import Question, QuestionWithChoices, Choice
 
 router = APIRouter()
 package_dir = Path(__file__).parent.parent.absolute()
 templates_dir = str(package_dir / "templates")
 templates = Jinja2Templates(directory=templates_dir)
-
-
-# Pydantic models for serialization
-class Choice(BaseModel):
-    choice_text: str
-
-
-class QuestionWithChoices(BaseModel):
-    question_text: str
-    choices: List[Choice]
 
 
 @router.post("/v1/question/")
@@ -64,10 +51,11 @@ def read_question_json(question_id: int, session: Session = Depends(get_session)
     session.refresh(question)
 
     # Convert the SQLModel objects to Pydantic models
+    choices = [Choice(id=option.id, choice_text=option.choice_text) for option in question.choices]
     question_with_options = QuestionWithChoices(
         id=question.id,
         question_text=question.question_text,
-        choices=[Choice(id=option.id, choice_text=option.choice_text) for option in question.choices]
+        choices=choices
     )
     return question_with_options
 

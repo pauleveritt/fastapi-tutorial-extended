@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+from pydantic import BaseModel
 from sqlmodel import Field, Relationship, SQLModel, Column, TIMESTAMP, text
 
 
@@ -26,3 +27,6 @@ class Choice(SQLModel, table=True):
     question: Question | None = Relationship(back_populates="choices")
 
 
+class QuestionWithChoices(BaseModel):
+    question_text: str
+    choices: list[Choice]
