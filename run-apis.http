@@ -26,12 +26,11 @@ Content-Type: application/json
 
 ###
 # Update Question with specific ID
-PUT http://localhost:8000/v1/question/5
+PUT http://localhost:8000/v1/question/6
 Content-Type: application/json
 
 {
-  "question_text": "Sample Testing !",
-  "pub_date": "2023-02-01"
+  "question_text": "Sample Testing !"
 }
 
 ###

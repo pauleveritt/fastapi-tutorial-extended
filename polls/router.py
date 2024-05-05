@@ -46,6 +46,7 @@ def create_question(request_data: dict, session: Session = Depends(get_session))
 
     return {"status": "ok", "message": "Question Added!"}
 
+
 @router.get("/v1/question/")
 def read_questions(session: Session = Depends(get_session)):
     questions = session.exec(select(Question)).all()
@@ -72,30 +73,30 @@ def read_question_json(question_id: int, session: Session = Depends(get_session)
 
 
 @router.patch("/v1/question/{question_id}", response_model=Question)
-def patch_hero(question_id: int, question: Question, session: Session = Depends(get_session)):
-    db_hero = session.get(Question, question_id)
-    if not db_hero:
-        raise HTTPException(status_code=404, detail="Hero not found")
+def patch_question(question_id: int, question: Question, session: Session = Depends(get_session)):
+    db_patch_question = session.get(Question, question_id)
+    if not db_patch_question:
+        raise HTTPException(status_code=404, detail="Question not found")
     question_data = question.model_dump(exclude_unset=True)
-    db_hero.sqlmodel_update(question_data)
-    session.add(db_hero)
+    db_patch_question.sqlmodel_update(question_data)
+    session.add(db_patch_question)
     session.commit()
-    session.refresh(db_hero)
-    return db_hero
+    session.refresh(db_patch_question)
+    return db_patch_question
 
 
 @router.put("/v1/question/{question_id}", response_model=Question)
-def put_hero(question_id: int, question: Question, session: Session = Depends(get_session)):
+def put_question(question_id: int, question: Question, session: Session = Depends(get_session)):
     # Very similar to PATCH
-    db_hero = session.get(Question, question_id)
+    db_put_question = session.get(Question, question_id)
     if not db_hero:
-        raise HTTPException(status_code=404, detail="Hero not found")
+        raise HTTPException(status_code=404, detail="Question not found")
     question_data = question.model_dump(exclude_unset=True)
-    db_hero.sqlmodel_update(question_data)
-    session.add(db_hero)
+    db_put_question.sqlmodel_update(question_data)
+    session.add(db_put_question)
     session.commit()
-    session.refresh(db_hero)
-    return db_hero
+    session.refresh(db_put_question)
+    return db_put_question
 
 
 @router.delete("/v1/question/{question_id}")
