@@ -17,20 +17,25 @@ export function Index() {
     }, []);
     return (
         <div className="grid gap-4 grid-cols-4 mx-2 mt-2">
-            <h1>Questions</h1>
-            <ul>
-                {questions &&
-                    questions.map((question) => (
-                        <li key={question.id}>
+            {questions &&
+                questions.map((question) => (
+                    <div
+                        key={question.id}
+                        className="card lg:card-side bg-base-100 shadow-xl"
+                    >
+                        <div className="card-body">
+                            <h2 className="card-title">
+                                Question Number {question.id}
+                            </h2>
                             <a
                                 href={`${URL}/${question.id}`}
                                 aria-label="Question"
                             >
                                 {question.question_text}
                             </a>
-                        </li>
-                    ))}
-            </ul>
+                        </div>
+                    </div>
+                ))}
         </div>
     );
 }
