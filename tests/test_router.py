@@ -4,10 +4,10 @@ from fastapi.testclient import TestClient
 from sqlmodel import Session, SQLModel, create_engine
 from sqlmodel.pool import StaticPool
 
-from polls.app import app
-from polls.database import get_session
-from polls.models import Question
-from polls.seed import questions_data
+from app import app
+from app.polls.database import get_session
+from app.polls.models import Question
+from app.polls.seed import questions_data
 
 
 @pytest.fixture(name="session")
@@ -30,6 +30,12 @@ def client_fixture(session: Session):
     client = TestClient(app)
     yield client
     app.dependency_overrides.clear()
+
+
+def test_read_static(client: TestClient):
+    # Use the existing seed data
+    response = client.get("/static/site.js")
+    assert 200 == response.status_code
 
 
 def test_read_questions_json(client: TestClient):
@@ -58,7 +64,10 @@ def test_read_question_json(client: TestClient):
 
 
 def test_create_question_json(client: TestClient):
-    post_data = {"question_text": questions_data[0]["question_text"], "choices": ["First Choice"]}
+    post_data = {
+        "question_text": questions_data[0]["question_text"],
+        "choices": ["First Choice"],
+    }
     response = client.post("/v1/question/", json=post_data)
     data = response.json()
     assert data["message"] == "Question Added!"
@@ -70,7 +79,9 @@ def test_patch_question_json(client: TestClient, session: Session):
     session.add(question)
     session.commit()
 
-    response = client.patch(f"/v1/question/{question.id}", json={"question_text": "What?"})
+    response = client.patch(
+        f"/v1/question/{question.id}", json={"question_text": "What?"}
+    )
     assert response.status_code == 200
     data = response.json()
     assert data["question_text"] == "What?"

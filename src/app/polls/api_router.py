@@ -1,12 +1,11 @@
 from pathlib import Path
 
-from fastapi import APIRouter, Request, Depends, HTTPException
-from fastapi.responses import HTMLResponse
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.templating import Jinja2Templates
 from sqlmodel import Session, select
 
-from polls.database import get_session
-from polls.models import Question, QuestionWithChoices, Choice
+from app.polls.database import get_session
+from app.polls.models import Question, QuestionWithChoices, Choice
 
 router = APIRouter()
 package_dir = Path(__file__).parent.parent.absolute()
@@ -14,9 +13,9 @@ templates_dir = str(package_dir / "templates")
 templates = Jinja2Templates(directory=templates_dir)
 
 
-@router.post("/v1/question/")
+@router.post("/question/")
 def create_question(request_data: dict, session: Session = Depends(get_session)):
-    from polls.models import Choice
+    from app.polls.models import Choice
 
     question_text = request_data.get("question_text")
     choices = request_data.get("choices")
@@ -35,14 +34,14 @@ def create_question(request_data: dict, session: Session = Depends(get_session))
     return {"status": "ok", "message": "Question Added!"}
 
 
-@router.get("/v1/question/")
+@router.get("/question/")
 def read_questions(session: Session = Depends(get_session)):
     questions = session.exec(select(Question)).all()
     return questions
 
 
-@router.get("/v1/question/{question_id}", response_model=QuestionWithChoices)
-def read_question_json(question_id: int, session: Session = Depends(get_session)):
+@router.get("/question/{question_id}", response_model=QuestionWithChoices)
+def read_question(question_id: int, session: Session = Depends(get_session)):
     # Fetch the question by ID
     question = session.get(Question, question_id)
     if not question:
@@ -62,7 +61,7 @@ def read_question_json(question_id: int, session: Session = Depends(get_session)
     return question_with_options
 
 
-@router.patch("/v1/question/{question_id}", response_model=Question)
+@router.patch("/question/{question_id}", response_model=Question)
 def patch_question(
     question_id: int, question: Question, session: Session = Depends(get_session)
 ):
@@ -77,7 +76,7 @@ def patch_question(
     return db_patch_question
 
 
-@router.put("/v1/question/{question_id}", response_model=Question)
+@router.put("/question/{question_id}", response_model=Question)
 def put_question(
     question_id: int, question: Question, session: Session = Depends(get_session)
 ):
@@ -93,7 +92,7 @@ def put_question(
     return db_put_question
 
 
-@router.delete("/v1/question/{question_id}")
+@router.delete("/question/{question_id}")
 async def delete_question(question_id: str, session: Session = Depends(get_session)):
     question = session.get(Question, question_id)
     if not question:
@@ -109,29 +108,29 @@ async def delete_question(question_id: str, session: Session = Depends(get_sessi
 
 
 # Questions, HTML
-@router.get("/question/", response_class=HTMLResponse)
-async def read_questions_html(
-    request: Request, session: Session = Depends(get_session)
-):
-    questions = session.exec(select(Question)).all()
-    context = dict(questions=questions)
-    return templates.TemplateResponse(
-        request=request, name="questions.html", context=context
-    )
-
-
-@router.get("/question/{question_id}", response_class=HTMLResponse)
-async def read_question_html(
-    request: Request, question_id: str, session: Session = Depends(get_session)
-):
-    question = session.exec(select(Question).where(Question.id == question_id))
-    context = dict(question=question.one())
-    return templates.TemplateResponse(
-        request=request, name="question.html", context=context
-    )
-
-
-# Home page
-@router.get("/", response_class=HTMLResponse)
-async def index_html(request: Request):
-    return templates.TemplateResponse(request=request, name="index.html")
+# @router.get("/question/", response_class=HTMLResponse)
+# async def read_questions_html(
+#     request: Request, session: Session = Depends(get_session)
+# ):
+#     questions = session.exec(select(Question)).all()
+#     context = dict(questions=questions)
+#     return templates.TemplateResponse(
+#         request=request, name="questions.html", context=context
+#     )
+#
+#
+# @router.get("/question/{question_id}", response_class=HTMLResponse)
+# async def read_question_html(
+#     request: Request, question_id: str, session: Session = Depends(get_session)
+# ):
+#     question = session.exec(select(Question).where(Question.id == question_id))
+#     context = dict(question=question.one())
+#     return templates.TemplateResponse(
+#         request=request, name="question.html", context=context
+#     )
+#
+#
+# # Home page
+# @router.get("/", response_class=HTMLResponse)
+# async def index_html(request: Request):
+#     return templates.TemplateResponse(request=request, name="index.html")
